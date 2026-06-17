@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style/reset.css">
+  <link rel="stylesheet" href="./style/global.css">
+  <link rel="stylesheet" href="./style/header.css">
+  <link rel="stylesheet" href="./style/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Audiowide&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <title>Resultado - Modelo OSI</title>
+
+  <style>
+    .resultado-wrapper {
+      padding: 2rem;
+      color: #e3e0b3;
+    }
+
+    .resultado-wrapper h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: #079ea6;
+    }
+
+    .resultado-wrapper h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #f5be58;
+      margin-top: 1.5rem;
+    }
+
+    .token-box {
+      background-color: #0d0620;
+      border: 1px solid #079ea6;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #f0077b;
+      margin-bottom: 1rem;
+    }
+
+    .payload-box {
+      background-color: #0d0620;
+      border: 1px solid #f5be58;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #e3e0b3;
+      white-space: pre-wrap;
+      margin-bottom: 1rem;
+    }
+
+    .voltar-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #079ea6;
+      color: #FFF;
+      border: none;
+      border-radius: 0.5rem;
+      font-family: "Poppins", sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .voltar-btn:hover {
+      background-color: #056e75;
+    }
+
+    .camada-label {
+      display: inline-block;
+      background-color: #f0077b;
+      color: #FFF;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.3rem;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="head">
+    <img class="osi-img" src="./assets/osi-icon.webp" alt="">
+    <p class="title">Projeto Redes - Modelo OSI</p>
+    <p class="user"></p>
+  </header>
+  <main class="main">
+    <div class="resultado-wrapper">
+      <h2>Resultado da Requisição</h2>
+
+      <span class="camada-label">Camada de Aplicação — Payload Original</span>
+      <h3>Dados da Requisição</h3>
+      <pre class="payload-box" id="payload-display">Carregando...</pre>
+
+      <span class="camada-label">Camada de Apresentação — Criptografia JWT</span>
+      <h3>Token JWT Gerado</h3>
+      <div class="token-box" id="token-display">Carregando...</div>
+
+      <br>
+      <a href="./index.html" class="voltar-btn">← Voltar</a>
+    </div>
+  </main>
+
+  <script type="module" src="./scripts/resultado.js"></script>
+</body>
+
+</html>

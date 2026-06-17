@@ -1,33 +1,26 @@
+// Importa a biblioteca jose via CDN (skypack) para gerar Token JWT
+import * as jose from 'https://cdn.skypack.dev/jose';
+
 const USER_NAME = 'JH';
 
 const user = document.querySelector('.user');
 if (user) user.textContent = `Usuário: ${USER_NAME}`;
 
-export function aplicarCifraDeCesar(texto, deslocamento = 3) {
-  if (typeof texto !== 'string' || !texto) return texto;
-  
-  return texto.split('').map(char => {
-    if (char.match(/[a-z]/i)) {
-      const code = char.charCodeAt(0);
-      const base = (code >= 65 && code <= 90) ? 65 : 97;
-      return String.fromCharCode(((code - base + deslocamento) % 26) + base);
-    }
-    return char; 
-  }).join('');
+// Chave secreta usada para assinar o JWT (HS256)
+const JWT_SECRET = new TextEncoder().encode('segredo-osi-redes-2024');
+
+export async function processarApresentacao(objetoAplicacao) {
+  // Gera um Token JWT assinado com o payload dos dados da Camada de Aplicação
+  const token = await new jose.SignJWT({ ...objetoAplicacao })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('2h')
+    .sign(JWT_SECRET);
+
+  return token;
 }
 
-export function processarApresentacao(objetoAplicacao) {
-  const objetoCriptografado = { ...objetoAplicacao }; 
-
-  if (objetoCriptografado.mensagem) objetoCriptografado.mensagem = aplicarCifraDeCesar(objetoCriptografado.mensagem);
-  if (objetoCriptografado.corpo) objetoCriptografado.corpo = aplicarCifraDeCesar(objetoCriptografado.corpo);
-  if (objetoCriptografado.hostIP) objetoCriptografado.hostIP = aplicarCifraDeCesar(objetoCriptografado.hostIP);
-  if (objetoCriptografado.nomeArquivo) objetoCriptografado.nomeArquivo = aplicarCifraDeCesar(objetoCriptografado.nomeArquivo);
-
-  return objetoCriptografado;
-}
-
-export function gerarObjetoAplicacao(tipo, inputText, fileInput) {
+export function gerarObjetoAplicacao(tipo, inputText, fileInput, dadosEmail) {
   const timestamp = new Date().toISOString();
   let objeto = {};
 
@@ -60,17 +53,28 @@ export function gerarObjetoAplicacao(tipo, inputText, fileInput) {
       break;
       
     case 'email':
-      // Validação: Precisa conter obrigatoriamente '@' e '.com'
-      if (!inputText.includes('@') || !inputText.includes('.com')) {
-        alert('Erro na Camada de Aplicação: O e-mail inserido precisa conter "@" e ".com" (ex: teste@gmail.com).');
-        return null; // Retorna null para sinalizar que a validação falhou
+      // Pega os dados do formulário de e-mail específico
+      const remetente = dadosEmail?.remetente || '';
+      const destinatario = dadosEmail?.destinatario || '';
+      const assunto = dadosEmail?.assunto || '';
+      const corpo = dadosEmail?.corpo || '';
+
+      // Validação: remetente e destinatário precisam conter '@' e '.com'
+      if (!remetente.includes('@') || !remetente.includes('.com')) {
+        alert('Erro na Camada de Aplicação: O e-mail do remetente precisa conter "@" e ".com".');
+        return null;
+      }
+      if (!destinatario.includes('@') || !destinatario.includes('.com')) {
+        alert('Erro na Camada de Aplicação: O e-mail do destinatário precisa conter "@" e ".com".');
+        return null;
       }
       
       objeto = {
-        remetente: USER_NAME,
-        destinatario: inputText,
-        assunto: 'Requisição de E-mail',
-        corpo: 'Corpo da mensagem simulada',
+        tipo: 'email',
+        remetente: remetente,
+        destinatario: destinatario,
+        assunto: assunto || 'Sem assunto',
+        corpo: corpo || 'Sem corpo',
         protocolo: 'SMTP/POP',
         timestamp: timestamp
       };

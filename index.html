@@ -36,6 +36,18 @@
       
       <button class="request-btn">Realizar Requisição</button>
     </div>
+
+    <!-- Formulário de E-mail (só aparece quando '3 - E-mail' é selecionado) -->
+    <div id="email-form" style="display: none; padding: 1rem 2rem;">
+      <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+        <input class="text-input" type="email" id="email-remetente" placeholder="Remetente (ex: eu@gmail.com)" style="flex: 1;">
+        <input class="text-input" type="email" id="email-destinatario" placeholder="Destinatário (ex: você@gmail.com)" style="flex: 1;">
+      </div>
+      <div style="display: flex; gap: 1rem; flex-direction: column;">
+        <input class="text-input" type="text" id="email-assunto" placeholder="Assunto" style="width: 100%;">
+        <textarea class="text-input" id="email-corpo" placeholder="Corpo da mensagem..." style="width: 100%; height: 6rem; resize: vertical; padding: 0.5rem;"></textarea>
+      </div>
+    </div>
     <div class="protocol-name-wrapper">
       <h1 class="protocol-name"></h1>
     </div>
