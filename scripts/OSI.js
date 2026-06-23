@@ -3,6 +3,19 @@ import { camadaFisica } from "./fisica.js";
 
 const reqBtn = document.querySelector('.request-btn');
 const inputTexto = document.querySelector('#text-input');
+const inputArquivo = document.querySelector('#arquivo');
+const emailForm = document.querySelector('#email-form');
+
+if (inputTexto) {
+  inputTexto.addEventListener('input', function() {
+    const valor = inputTexto.value;
+    if (valor.includes('@')) {
+      if (emailForm) emailForm.style.display = 'block';
+    } else {
+      if (emailForm) emailForm.style.display = 'none';
+    }
+  });
+}
 
 if (reqBtn && inputTexto) {
   reqBtn.addEventListener('click', function(event) {
@@ -10,15 +23,27 @@ if (reqBtn && inputTexto) {
 
     const texto = inputTexto.value.trim();
 
-    // Validação simples
     if (!texto) {
       alert("Por favor, digite uma mensagem.");
       return;
     }
 
-    // Cria um mock de segmentos baseado no texto para manter a compatibilidade
-    // com o map() interno da camada de enlace
-    const mockSegmentos = [{ sequencia: 1, dados: texto }];
+    let conteudoFinal = texto;
+
+    // Se for um email, adiciona os dados extras
+    if (texto.includes('@')) {
+      const assunto = document.querySelector('#email-assunto')?.value || '';
+      const corpo = document.querySelector('#email-corpo')?.value || '';
+      conteudoFinal += `\n[Assunto: ${assunto}]\n[Corpo: ${corpo}]`;
+    }
+
+    // Se houver arquivo selecionado
+    if (inputArquivo && inputArquivo.files.length > 0) {
+      const fileName = inputArquivo.files[0].name;
+      conteudoFinal += `\n[Arquivo anexo: ${fileName}]`;
+    }
+
+    const mockSegmentos = [{ sequencia: 1, dados: conteudoFinal }];
 
     // 2. Camada de Enlace (L2)
     const objEnlace = camadaEnlace(mockSegmentos);
@@ -28,7 +53,7 @@ if (reqBtn && inputTexto) {
 
     // Objeto unificado com as informações simplificadas
     const osiSimplificado = {
-      textoOriginal: texto,
+      textoOriginal: conteudoFinal,
       enlace: objEnlace,
       fisica: objFisica
     };

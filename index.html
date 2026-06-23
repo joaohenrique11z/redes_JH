@@ -24,9 +24,18 @@
   </header>
   <main class="main">
     <div class="request-wrapper">
-      <input class="text-input" type="text" id="text-input" placeholder="Digite a mensagem..." style="margin-right: 1rem;">
+      <input class="text-input" type="text" id="text-input" placeholder="Digite a mensagem, www.site.com ou email@..." style="margin-right: 1rem;">
+      <input type="file" name="file" id="arquivo" style="margin-right: 1rem;">
       
       <button class="request-btn">Realizar Requisição</button>
+    </div>
+
+    <!-- Campos adicionais de E-mail (aparecem automaticamente quando "@" é detectado) -->
+    <div id="email-form" style="display: none; padding: 1rem 2rem;">
+      <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+        <input class="text-input" type="text" id="email-assunto" placeholder="Assunto" style="flex: 1;">
+        <textarea class="text-input" id="email-corpo" placeholder="Corpo da mensagem..." style="flex: 1; height: 6rem; resize: vertical; padding: 0.5rem;"></textarea>
+      </div>
     </div>
   </main>
   
