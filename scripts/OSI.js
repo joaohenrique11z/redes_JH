@@ -1,4 +1,8 @@
 import { gerarObjetoAplicacao, processarApresentacao } from "./application.js";
+import { camadaSessao } from "./sessao.js";
+import { camadaTransporte } from "./transporte.js";
+import { camadaEnlace } from "./enlace.js";
+import { camadaFisica } from "./fisica.js";
 
 const reqBtn = document.querySelector('.request-btn');
 const inputTexto = document.querySelector('#text-input');
@@ -6,8 +10,7 @@ const inputArquivo = document.querySelector('#arquivo');
 const protocolName = document.querySelector('.protocol-name');
 const emailForm = document.querySelector('#email-form');
 
-// Estado inicial: oculta o input de arquivo (só aparece quando não há texto — usuário escolhe arquivo)
-if (inputArquivo) inputArquivo.style.display = 'none';
+// O input de arquivo agora ficará sempre visível
 
 // Reconhecimento automático do tipo de requisição com base no que o usuário digita
 if (inputTexto) {
@@ -57,8 +60,30 @@ if (reqBtn) {
     console.log("=== 2. CAMADA DE APRESENTAÇÃO (Token JWT Gerado) ===");
     console.log(tokenJWT);
 
+    // 3. CAMADA DE SESSÃO
+    const objSessao = camadaSessao(tokenJWT);
+
+    // 4. CAMADA DE TRANSPORTE
+    const objTransporte = camadaTransporte(objSessao);
+
+    // 5. CAMADA DE ENLACE (Note que a de Rede será na próxima página)
+    const objEnlace = camadaEnlace(objTransporte);
+
+    // 6. CAMADA FÍSICA
+    const objFisica = camadaFisica(objEnlace);
+
+    // Objeto unificado
+    const osiCompleto = {
+      aplicacao: objetoAplicacao,
+      apresentacao: tokenJWT,
+      sessao: objSessao,
+      transporte: objTransporte,
+      enlace: objEnlace,
+      fisica: objFisica
+    };
+
     // Salva os dados no localStorage e redireciona para a página de resultado
-    localStorage.setItem('osi_payload', JSON.stringify(objetoAplicacao));
+    localStorage.setItem('osi_payload', JSON.stringify(osiCompleto));
     localStorage.setItem('osi_token', tokenJWT);
 
     window.location.href = 'resultado.html';
