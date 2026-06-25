@@ -11,6 +11,9 @@ if (user) user.textContent = `Usuário: ${USER_NAME}`;
 // Pega os dados salvos no localStorage pelo OSI.js
 const payloadStr = localStorage.getItem('osi_payload');
 
+const apresentacaoDisplay = document.querySelector('#apresentacao-display');
+const sessaoDisplay = document.querySelector('#sessao-display');
+const transporteDisplay = document.querySelector('#transporte-display');
 const enlaceDisplay = document.querySelector('#enlace-display');
 const fisicaDisplay = document.querySelector('#fisica-display');
 const redeInfo = document.querySelector('#rede-info');
@@ -19,7 +22,10 @@ if (payloadStr) {
   try {
     const osiSimplificado = JSON.parse(payloadStr);
     
-    // Exibe os blocos de Enlace e Física
+    // Exibe os blocos das camadas
+    if (apresentacaoDisplay) apresentacaoDisplay.textContent = JSON.stringify(osiSimplificado.apresentacao, null, 2);
+    if (sessaoDisplay) sessaoDisplay.textContent = JSON.stringify(osiSimplificado.sessao, null, 2);
+    if (transporteDisplay) transporteDisplay.textContent = JSON.stringify(osiSimplificado.transporte, null, 2);
     if (enlaceDisplay) enlaceDisplay.textContent = JSON.stringify(osiSimplificado.enlace, null, 2);
     if (fisicaDisplay) fisicaDisplay.textContent = osiSimplificado.fisica || "Erro ao carregar dados físicos";
 

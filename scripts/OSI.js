@@ -1,3 +1,6 @@
+import { camadaApresentacao } from "./apresentacao.js";
+import { camadaSessao } from "./sessao.js";
+import { camadaTransporte } from "./transporte.js";
 import { camadaEnlace } from "./enlace.js";
 import { camadaFisica } from "./fisica.js";
 
@@ -43,10 +46,17 @@ if (reqBtn && inputTexto) {
       conteudoFinal += `\n[Arquivo anexo: ${fileName}]`;
     }
 
-    const mockSegmentos = [{ sequencia: 1, dados: conteudoFinal }];
+    // 6. Camada de Apresentação (L6)
+    const objApresentacao = camadaApresentacao(conteudoFinal);
+
+    // 5. Camada de Sessão (L5)
+    const objSessao = camadaSessao(objApresentacao);
+
+    // 4. Camada de Transporte (L4)
+    const objTransporte = camadaTransporte(objSessao);
 
     // 2. Camada de Enlace (L2)
-    const objEnlace = camadaEnlace(mockSegmentos);
+    const objEnlace = camadaEnlace(objTransporte);
 
     // 1. Camada Física (L1)
     const objFisica = camadaFisica(objEnlace);
@@ -54,6 +64,9 @@ if (reqBtn && inputTexto) {
     // Objeto unificado com as informações simplificadas
     const osiSimplificado = {
       textoOriginal: conteudoFinal,
+      apresentacao: objApresentacao,
+      sessao: objSessao,
+      transporte: objTransporte,
       enlace: objEnlace,
       fisica: objFisica
     };
