@@ -15,13 +15,24 @@ function getMacOrigem() {
     return mac;
 }
 
+function deriveMacDestino(packetId) {
+    if (!packetId) return generateMAC();
+    const hexChars = packetId.replace(/[^a-fA-F0-9]/g, '');
+    let mac = "";
+    for (let i = 0; i < 12; i += 2) {
+        mac += (hexChars.substring(i, i+2) || "00").toUpperCase();
+        if (i < 10) mac += ":";
+    }
+    return mac;
+}
+
 export function camadaEnlace(pacotes) {
     let idCounter = 1;
     const quadros = pacotes.map(pacote => {
         const quadroBase = {
             frameId: `F${String(idCounter++).padStart(3, '0')}`,
             macOrigem: getMacOrigem(),
-            macDestino: generateMAC(),
+            macDestino: deriveMacDestino(pacote.dados?.packetId),
             tipo: "IPv4",
             dados: pacote
         };

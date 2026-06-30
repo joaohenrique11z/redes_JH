@@ -1,10 +1,11 @@
-export function camadaSessao(dados) {
-    // Camada de Sessão: Estabelece, gerencia e finaliza sessões (diálogos)
+export function camadaSessao(dadosApresentacao) {
     const payload = {
-        sessaoId: "SESS-" + Math.floor(Math.random() * 1000000),
+        sessaoId: crypto.randomUUID(),
         status: "ESTABELECIDA",
-        token: Math.random().toString(36).substring(2, 10),
-        dados: dados
+        token: dadosApresentacao.jwtToken,
+        ipDestino: dadosApresentacao.ipResolvido,
+        protocolo: dadosApresentacao.protocolo,
+        dados: dadosApresentacao
     };
     console.log("CAMADA DE SESSÃO", payload);
     return payload;

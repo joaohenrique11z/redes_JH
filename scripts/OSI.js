@@ -8,20 +8,26 @@ const reqBtn = document.querySelector('.request-btn');
 const inputTexto = document.querySelector('#text-input');
 const inputArquivo = document.querySelector('#arquivo');
 const emailForm = document.querySelector('#email-form');
+const siteForm = document.querySelector('#site-form');
 
 if (inputTexto) {
   inputTexto.addEventListener('input', function() {
-    const valor = inputTexto.value;
+    const valor = inputTexto.value.toLowerCase();
     if (valor.includes('@')) {
       if (emailForm) emailForm.style.display = 'block';
+      if (siteForm) siteForm.style.display = 'none';
+    } else if (valor.includes('www') || valor.startsWith('http') || valor.includes('.com')) {
+      if (siteForm) siteForm.style.display = 'block';
+      if (emailForm) emailForm.style.display = 'none';
     } else {
       if (emailForm) emailForm.style.display = 'none';
+      if (siteForm) siteForm.style.display = 'none';
     }
   });
 }
 
 if (reqBtn && inputTexto) {
-  reqBtn.addEventListener('click', function(event) {
+  reqBtn.addEventListener('click', async function(event) {
     event.preventDefault();
 
     const texto = inputTexto.value.trim();
@@ -32,22 +38,44 @@ if (reqBtn && inputTexto) {
     }
 
     let conteudoFinal = texto;
+    let protocolo = "HTTP"; // Padrão
 
-    // Se for um email, adiciona os dados extras
-    if (texto.includes('@')) {
+    if (emailForm && emailForm.style.display === 'block') {
+      const remetente = document.querySelector('#email-remetente')?.value || '';
+      const destinatario = document.querySelector('#email-destinatario')?.value || '';
       const assunto = document.querySelector('#email-assunto')?.value || '';
       const corpo = document.querySelector('#email-corpo')?.value || '';
-      conteudoFinal += `\n[Assunto: ${assunto}]\n[Corpo: ${corpo}]`;
-    }
 
-    // Se houver arquivo selecionado
-    if (inputArquivo && inputArquivo.files.length > 0) {
+      if (!remetente || !destinatario || !assunto || !corpo) {
+        alert('Por favor, preencha todos os campos do e-mail antes de enviar.');
+        return;
+      }
+
+      conteudoFinal += `\n[Remetente: ${remetente}]\n[Destinatário: ${destinatario}]\n[Assunto: ${assunto}]\n[Corpo: ${corpo}]`;
+      protocolo = "SMTP";
+    } else if (siteForm && siteForm.style.display === 'block') {
+      const metodo = document.querySelector('#site-metodo')?.value || 'GET';
+      conteudoFinal += `\n[Método HTTP: ${metodo}]`;
+
+      if (texto.startsWith('wss://') || texto.startsWith('ws://')) {
+        protocolo = "WEBSOCKET";
+      } else if (texto.startsWith('https://')) {
+        protocolo = "HTTPS";
+      }
+    } else if (inputArquivo && inputArquivo.files.length > 0) {
       const fileName = inputArquivo.files[0].name;
       conteudoFinal += `\n[Arquivo anexo: ${fileName}]`;
+      protocolo = "FTP";
     }
 
+    const payloadAplicacao = {
+      dados: conteudoFinal,
+      protocolo: protocolo,
+      dominioOriginal: texto
+    };
+
     // 6. Camada de Apresentação (L6)
-    const objApresentacao = camadaApresentacao(conteudoFinal);
+    const objApresentacao = await camadaApresentacao(payloadAplicacao);
 
     // 5. Camada de Sessão (L5)
     const objSessao = camadaSessao(objApresentacao);

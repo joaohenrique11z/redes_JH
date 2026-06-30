@@ -42,40 +42,35 @@ if (payloadStr) {
     }
 
     // ------------------------------------
-    // ACIONAR A CAMADA DE REDE (3)
+    // LER E EXIBIR A ROTA CALCULADA NA CAMADA DE REDE
     // ------------------------------------
     createNetwork();
-    randomFailures(15);
     
-    const ativos = network.filter(router => router.active);
-
-    if (ativos.length >= 2) {
-      const origem = ativos[Math.floor(Math.random() * ativos.length)].id;
-      let destino = ativos[Math.floor(Math.random() * ativos.length)].id;
-      
-      while (origem === destino) {
-        destino = ativos[Math.floor(Math.random() * ativos.length)].id;
-      }
-      
-      const resultadoRota = dijkstra(network, origem, destino);
+    if (osiSimplificado.rede && osiSimplificado.rede.length > 0) {
+      const pacoteRede = osiSimplificado.rede[0];
+      const rota = pacoteRede.rotaCalculada;
       
       drawNetwork();
       
-      if (resultadoRota.path && resultadoRota.path.length > 1) {
-        drawRoute(resultadoRota.path, origem, destino);
+      if (rota && rota.caminho && rota.caminho.length > 1) {
+        drawRoute(rota.caminho, rota.origem, rota.destino);
         
         if (redeInfo) {
           redeInfo.innerHTML = `
             <div class="payload-box">
-              <p><strong>Origem:</strong> R${origem}</p>
-              <p><strong>Destino:</strong> R${destino}</p>
-              <p><strong>Custo Total:</strong> ${resultadoRota.distance}</p>
-              <p><strong>Caminho:</strong> ${resultadoRota.path.join(" ➜ ")}</p>
+              <p><strong>JWT Token (L6):</strong> ${osiSimplificado.apresentacao.jwtToken}</p>
+              <p><strong>IP DNS Resolvido (L6):</strong> ${osiSimplificado.apresentacao.ipResolvido}</p>
+              <p><strong>Porta Destino (L4):</strong> ${osiSimplificado.transporte[0].portaDestino}</p>
+              <hr style="border: 0; border-top: 1px solid #f5be58; margin: 10px 0;">
+              <p><strong>Origem (L3):</strong> R${rota.origem}</p>
+              <p><strong>Destino (L3):</strong> R${rota.destino}</p>
+              <p><strong>Custo Total:</strong> ${rota.custo}</p>
+              <p><strong>Caminho:</strong> ${rota.caminho.join(" ➜ ")}</p>
             </div>
           `;
         }
         
-        animatePacket(resultadoRota.path, origem, destino);
+        animatePacket(rota.caminho, rota.origem, rota.destino);
       } else {
         if (redeInfo) redeInfo.innerHTML = '<div class="payload-box"><p>Nenhuma rota encontrada.</p></div>';
       }

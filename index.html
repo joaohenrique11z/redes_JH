@@ -33,8 +33,23 @@
     <!-- Campos adicionais de E-mail (aparecem automaticamente quando "@" é detectado) -->
     <div id="email-form" style="display: none; padding: 1rem 2rem;">
       <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+        <input class="text-input" type="text" id="email-remetente" placeholder="Remetente" style="flex: 1;">
+        <input class="text-input" type="text" id="email-destinatario" placeholder="Destinatário" style="flex: 1;">
         <input class="text-input" type="text" id="email-assunto" placeholder="Assunto" style="flex: 1;">
+      </div>
+      <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
         <textarea class="text-input" id="email-corpo" placeholder="Corpo da mensagem..." style="flex: 1; height: 6rem; resize: vertical; padding: 0.5rem;"></textarea>
+      </div>
+    </div>
+
+    <div id="site-form" style="display: none; padding: 1rem 2rem;">
+      <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+        <select id="site-metodo" class="text-input" style="flex: 1;">
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+        </select>
       </div>
     </div>
   </main>
