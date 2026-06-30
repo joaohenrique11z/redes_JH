@@ -27,7 +27,19 @@ if (payloadStr) {
     if (sessaoDisplay) sessaoDisplay.textContent = JSON.stringify(osiSimplificado.sessao, null, 2);
     if (transporteDisplay) transporteDisplay.textContent = JSON.stringify(osiSimplificado.transporte, null, 2);
     if (enlaceDisplay) enlaceDisplay.textContent = JSON.stringify(osiSimplificado.enlace, null, 2);
-    if (fisicaDisplay) fisicaDisplay.textContent = osiSimplificado.fisica || "Erro ao carregar dados físicos";
+    
+    if (fisicaDisplay && Array.isArray(osiSimplificado.fisica)) {
+      let fisicaTexto = "";
+      osiSimplificado.fisica.forEach((res, i) => {
+        fisicaTexto += `[Quadro ${i+1}] Validação CRC: ${res.status}\n\n`;
+        fisicaTexto += `Objeto Transmitido:\n${JSON.stringify(res.dadosOriginais, null, 2)}\n\n`;
+        fisicaTexto += `Representação Binária:\n${res.binario}\n\n`;
+        fisicaTexto += `--------------------------------------------------\n\n`;
+      });
+      fisicaDisplay.textContent = fisicaTexto.trim();
+    } else if (fisicaDisplay) {
+      fisicaDisplay.textContent = "Erro ao carregar dados físicos";
+    }
 
     // ------------------------------------
     // ACIONAR A CAMADA DE REDE (3)

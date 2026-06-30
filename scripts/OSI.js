@@ -1,9 +1,9 @@
 import { camadaApresentacao } from "./apresentacao.js";
 import { camadaSessao } from "./sessao.js";
 import { camadaTransporte } from "./transporte.js";
+import { camadaRede } from "./rede.js";
 import { camadaEnlace } from "./enlace.js";
 import { camadaFisica } from "./fisica.js";
-
 const reqBtn = document.querySelector('.request-btn');
 const inputTexto = document.querySelector('#text-input');
 const inputArquivo = document.querySelector('#arquivo');
@@ -55,8 +55,11 @@ if (reqBtn && inputTexto) {
     // 4. Camada de Transporte (L4)
     const objTransporte = camadaTransporte(objSessao);
 
+    // 3. Camada de Rede (L3)
+    const objRede = camadaRede(objTransporte);
+
     // 2. Camada de Enlace (L2)
-    const objEnlace = camadaEnlace(objTransporte);
+    const objEnlace = camadaEnlace(objRede);
 
     // 1. Camada Física (L1)
     const objFisica = camadaFisica(objEnlace);
@@ -67,6 +70,7 @@ if (reqBtn && inputTexto) {
       apresentacao: objApresentacao,
       sessao: objSessao,
       transporte: objTransporte,
+      rede: objRede,
       enlace: objEnlace,
       fisica: objFisica
     };
